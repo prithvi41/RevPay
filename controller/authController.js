@@ -38,7 +38,6 @@ async function loginBusiness(req, res) {
             return res.status(http_status_code.BAD_REQUEST).send("missing required fields");
         }
         const businessExist = await businessModel.getBusinessByUserName(data.user_name);
-        console.log(businessExist.rows[0]);
         if(businessExist.rows.length === 0) {
             return res.status(http_status_code.BAD_REQUEST).send("business not registered");
         }
