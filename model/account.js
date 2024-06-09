@@ -1,4 +1,5 @@
 const client = require('../utils/dbConnection');
+const query_error = require("../utils/enum");
 
 async function createNewAccount(data) {
     try {
@@ -9,7 +10,7 @@ async function createNewAccount(data) {
                         data.account_number,
                         data.ifsc_code,
                         data.activation_status || 'ACTIVE',
-                        data.transaction_allowed || 'BOTH',
+                        data.transactions_allowed || 'BOTH',
                         data.daily_withdrawal_limit || 100000.00,
                         data.balance || 0.00];
         const result = await client.query(query, values);
@@ -17,7 +18,7 @@ async function createNewAccount(data) {
     }
     catch(err) {
         console.log(err);
-        throw new Error("error while executing query");
+        throw new Error(query_error);
     }
 }
 
@@ -30,8 +31,21 @@ async function getAllAccountsByBusinessId(business_id) {
     }
     catch(err) {
         console.log(err);
-        throw new Error("error while executing query");
+        throw new Error(query_error);
     }
 }
 
-module.exports = { createNewAccount, getAllAccountsByBusinessId };
+async function getAccountByAccountNumber(account_number) {
+    try {
+        const query = `SELECT * FROM ACCOUNTS WHERE account_number = $1`;
+        const values = [account_number];
+        const result = await client.query(query, values);
+        return result;
+    }
+    catch(err) {
+        console.log(err);
+        throw new Error(query_error);
+    }
+}
+
+module.exports = { createNewAccount, getAllAccountsByBusinessId, getAccountByAccountNumber };

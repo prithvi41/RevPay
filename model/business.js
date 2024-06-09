@@ -1,5 +1,5 @@
 const client = require("../utils/dbConnection");
-
+const query_error = require("../utils/enum");
 async function createUser(data) {
   try {
     const query = `INSERT INTO BUSINESSES (user_name, password, business_name) VALUES ($1, $2, $3)`;
@@ -9,7 +9,7 @@ async function createUser(data) {
   } 
   catch (err) {
     console.log(err);
-    throw new Error("error while executing query");
+    throw new Error(query_error);
   }
 }
 
@@ -22,7 +22,7 @@ async function getBusinessByUserName(user_name) {
   } 
   catch (err) {
     console.log(err);
-    throw new Error("error while executing query");
+    throw new Error(query_error);
   }
 }
 
