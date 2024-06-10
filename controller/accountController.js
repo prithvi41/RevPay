@@ -78,4 +78,25 @@ async function getAccounts(req, res) {
   }
 }
 
-module.exports = { createAccount, getAccounts };
+async function getAccountBalance(req, res) {
+  try {
+    const account_id = req.params.account_id;
+    // account exist
+    const accountDetails = await accountModel.getAccountById(account_id);
+    if (!accountDetails) {
+      return res
+        .status(http_status_code.BAD_REQUEST)
+        .send("Invalid account id");
+    }
+    return res
+      .status(http_status_code.OK)
+      .send({ "Account Balance": accountDetails.balance });
+  } catch (err) {
+    console.log(err);
+    return res
+      .status(http_status_code.INTERNAL_SERVER_ERROR)
+      .send("unexpected server error");
+  }
+}
+
+module.exports = { createAccount, getAccounts, getAccountBalance };
