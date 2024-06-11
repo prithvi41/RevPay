@@ -1,0 +1,130 @@
+APIs
+
+endpointsinput fieldsRequiredremarks/register
+
+
+
+
+
+user_name  
+password  
+business_name
+
+
+
+
+
+yes  
+yes(min 8 length)  
+yes
+
+
+
+
+
+to register an account
+
+
+
+
+
+/login
+
+
+
+
+
+user_name  
+password
+
+
+
+
+
+yes  
+yes
+
+
+
+
+
+to login a user
+
+
+
+
+
+/accounts/new
+
+
+
+
+
+business_id  
+account_number  
+ifsc_code  
+activation_status  
+transaction_allowed  
+daily_withdrawl_limit  
+balance
+
+
+
+
+
+yes  
+yes  
+yes  
+no(default - ACTIVE)  
+no(default - BOTH)  
+no(default - 100000)  
+no
+
+
+
+
+
+to create a new account
+
+
+
+
+
+/accounts/allAccounts
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+1.1 { "user_name": "testUser2", "password": "12345678", "business_name": "test_business2"}
+1.2 { "user_name": "testUser1", "password": "12345678", "business_name": "test_business1"}
+Login a business
+ 2.1 { "user_name" : "testUser2", "password" : "12345678"}
+ 2.2 { "user_name" : "testUser1", "password" : "12345678"}
+create a new account**3.1** for testUser1
+ { "account_number" : "1234567890", "ifsc_code" : "ABC12345"}
+
+
+

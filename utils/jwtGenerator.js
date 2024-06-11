@@ -3,10 +3,10 @@ require('dotenv').config();
 
 async function jwtGenerator(user_name, business_id) {
     const payload = {
-        userName : user_name,
-        businessId : business_id
+        userName: user_name,
+        businessId: business_id
     };
-    return jwt.sign(payload, process.env.SECRET_KEY, {expiresIn : 60 * 60});
-} 
+    return jwt.sign(payload, process.env.SECRET_KEY, { expiresIn: 60 * 60 });
+}
 
 module.exports = { jwtGenerator };

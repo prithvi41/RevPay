@@ -12,7 +12,7 @@ async function getDailyWithdrawnAmount(account_id) {
         const result = await client.query(query, values);
         return result.rows[0].total_withdrawl;
     }
-    catch(err) {
+    catch (err) {
         console.log(err);
         throw new Error(query_error);
     }
@@ -27,7 +27,7 @@ async function createTransaction(account_id, transaction_type, amount) {
         const result = await client.query(query, values);
         return result.rows[0];
     }
-    catch(err) {
+    catch (err) {
         console.log(err);
         throw new Error(query_error);
     }

@@ -6,7 +6,7 @@ async function createUser(data) {
     const values = [data.user_name, data.password, data.business_name];
     const result = await client.query(query, values);
     return result;
-  } 
+  }
   catch (err) {
     console.log(err);
     throw new Error(query_error);
@@ -19,7 +19,7 @@ async function getBusinessByUserName(user_name) {
     const values = [user_name];
     const result = await client.query(query, values);
     return result;
-  } 
+  }
   catch (err) {
     console.log(err);
     throw new Error(query_error);

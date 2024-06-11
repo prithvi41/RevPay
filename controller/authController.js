@@ -8,15 +8,15 @@ async function registerBusiness(req, res) {
     try {
         const data = req.body;
         // required fields validation
-        if(!data.user_name || !data.password || !data.business_name) {
+        if (!data.user_name || !data.password || !data.business_name) {
             return res.status(http_status_code.BAD_REQUEST).send("missing required fields");
         }
-        if(data.password && data.password.length < 8) {
+        if (data.password && data.password.length < 8) {
             return res.status(http_status_code.UNAUTHORIZED).send("minimum 8 length of password is required");
         }
         // if business already registered 
         const businessExist = await businessModel.getBusinessByUserName(data.user_name);
-        if(businessExist && businessExist.rows.length > 0) {
+        if (businessExist && businessExist.rows.length > 0) {
             return res.status(http_status_code.BAD_REQUEST).send("business already registered");
         }
         // password hashing 
@@ -24,9 +24,9 @@ async function registerBusiness(req, res) {
         const hashedPasssword = await bcrypt.hash(data.password, salt);
         data.password = hashedPasssword;
         const result = await businessModel.createUser(data);
-        return res.status(http_status_code.CREATED).send({message : "business registered successfully"});
+        return res.status(http_status_code.CREATED).send({ message: "business registered successfully" });
     }
-    catch(err) {
+    catch (err) {
         console.log(err);
         return res.status(http_status_code.INTERNAL_SERVER_ERROR).send("unexpected server error");
     }
@@ -37,24 +37,24 @@ async function loginBusiness(req, res) {
     try {
         const data = req.body;
         // required fields validation
-        if(!data.user_name || !data.password) {
+        if (!data.user_name || !data.password) {
             return res.status(http_status_code.BAD_REQUEST).send("missing required fields");
         }
         // if a business is not registered 
         const businessExist = await businessModel.getBusinessByUserName(data.user_name);
-        if(businessExist.rows.length === 0) {
+        if (businessExist.rows.length === 0) {
             return res.status(http_status_code.BAD_REQUEST).send("business not registered");
         }
         // password match
         const passwordMatch = await bcrypt.compare(data.password, businessExist.rows[0].password);
-        if(!passwordMatch) {
+        if (!passwordMatch) {
             return res.status(http_status_code.BAD_REQUEST).send("wrong password");
         }
         // generate jwt 
         const token = await jwt.jwtGenerator(data.user_name, businessExist.rows[0].id);
-        return res.status(http_status_code.OK).send({Token : token});
+        return res.status(http_status_code.OK).send({ Token: token });
     }
-    catch(err) {
+    catch (err) {
         console.log(err);
         return res.status(http_status_code.INTERNAL_SERVER_ERROR).send("unexpected server error");
     }

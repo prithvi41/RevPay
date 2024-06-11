@@ -5,7 +5,7 @@ require('dotenv').config();
 async function authenticateToken(req, res, next) {
     try {
         const authHeader = req.header("Authorization");
-        if(!authHeader || !authHeader.startsWith("Bearer ")) {
+        if (!authHeader || !authHeader.startsWith("Bearer ")) {
             return res.status(http_status_code.UNAUTHORIZED).send("Token not provided");
         }
         const token = authHeader.split(' ')[1];
@@ -14,7 +14,7 @@ async function authenticateToken(req, res, next) {
         req.user = payload;
         next();
     }
-    catch(err) {
+    catch (err) {
         console.log(err);
         return res.status(http_status_code.INTERNAL_SERVER_ERROR).send("unexpected server error");
     }
