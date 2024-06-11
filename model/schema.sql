@@ -26,6 +26,8 @@ CREATE TABLE IF NOT EXISTS TRANSACTIONS (
     account_id INT NOT NULL,
     transaction_type VARCHAR CHECK (transaction_type IN ('DEPOSIT', 'WITHDRAWL')) NOT NULL,
     amount DECIMAL(15, 2) NOT NULL,
+    sender_account_number BIGINT NOT NULL,
+    receiver_account_number BIGINT NOT NULL,
     created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
     updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
     FOREIGN KEY (account_id) REFERENCES ACCOUNTS(id)

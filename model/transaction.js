@@ -18,12 +18,12 @@ async function getDailyWithdrawnAmount(account_id) {
     }
 }
 
-async function createTransaction(account_id, transaction_type, amount) {
+async function createTransaction(account_id, transaction_type, amount, sender_account_number, receiver_account_number) {
     try {
-        const query = `INSERT INTO TRANSACTIONS (account_id, transaction_type, amount)
-                        VALUES ($1, $2, $3) 
+        const query = `INSERT INTO TRANSACTIONS (account_id, transaction_type, amount, sender_account_number, receiver_account_number)
+                        VALUES ($1, $2, $3, $4, $5) 
                         RETURNING *;`
-        const values = [account_id, transaction_type, amount];
+        const values = [account_id, transaction_type, amount, sender_account_number, receiver_account_number];
         const result = await client.query(query, values);
         return result.rows[0];
     }

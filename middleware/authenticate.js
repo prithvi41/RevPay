@@ -16,7 +16,15 @@ async function authenticateToken(req, res, next) {
     }
     catch (err) {
         console.log(err);
-        return res.status(http_status_code.INTERNAL_SERVER_ERROR).send("unexpected server error");
+        if (err instanceof jwt.TokenExpiredError) {
+            return res.status(http_status_code.UNAUTHORIZED).send("Token expired");
+        }
+        else if (err instanceof jwt.JsonWebTokenError) {
+            return res.status(http_status_code.UNAUTHORIZED).send("Invalid token provided");
+        }
+        else {
+            return res.status(http_status_code.INTERNAL_SERVER_ERROR).send("unexpected server error");
+        }
     }
 }
 

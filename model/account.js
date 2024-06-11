@@ -96,13 +96,17 @@ async function updateBalanceAndCreateTransactions(
         const senderTransaction = await transactionModel.createTransaction(
             data.sender_account_id,
             "WITHDRAWL",
-            data.transaction_amount
+            data.transaction_amount,
+            data.sender_account_number,
+            data.receiver_account_number
         );
         // create transaction entry for reciever
         const receiverTransaction = await transactionModel.createTransaction(
             data.receiver_account_id,
             "DEPOSIT",
-            data.transaction_amount
+            data.transaction_amount,
+            data.sender_account_number, 
+            data.receiver_account_number
         );
         await client.query("COMMIT");
         return {
