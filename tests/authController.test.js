@@ -66,7 +66,9 @@ describe("Auth Controller", () => {
         });
 
         it("should register a business and return 201", async () => {
-            businessModel.getBusinessByUserName.mockResolvedValue({ rows: [] });
+            businessModel.getBusinessByUserName
+            .mockResolvedValueOnce({ rows: [] }) 
+            .mockResolvedValueOnce({ rows: [{ id: 1, user_name: "test" }] });
             bcrypt.genSalt.mockResolvedValue("salt");
             bcrypt.hash.mockResolvedValue("hashedpassword");
             businessModel.createUser.mockResolvedValue({});
@@ -79,6 +81,23 @@ describe("Auth Controller", () => {
                 });
             expect(res.status).toBe(httpStatusCode.CREATED);
             expect(res.body.message).toBe("business registered successfully");
+            expect(res.body.id).toBe(1); 
+            expect(res.body.user_name).toBe("test"); 
+        });
+
+        it("should handle server errors", async () => {
+            businessModel.getBusinessByUserName.mockImplementation(() => {
+                throw new Error("unexpected server error");
+            });
+            const res = await request(app)
+                .post("/register")
+                .send({
+                    user_name: "test",
+                    password: "password123",
+                    business_name: "test",
+                });
+            expect(res.status).toBe(httpStatusCode.INTERNAL_SERVER_ERROR);
+            expect(res.text).toBe("unexpected server error");
         });
     });
 
@@ -119,7 +138,7 @@ describe("Auth Controller", () => {
 
         it("should return 200 with token if login is successful", async () => {
             businessModel.getBusinessByUserName.mockResolvedValue({
-                rows: [{ id: 1, password: "hashedpassword" }],
+                rows: [{ id: 1, user_name: "test", password: "hashedpassword" }],
             });
             bcrypt.compare.mockResolvedValue(true);
             jwt.jwtGenerator.mockResolvedValue("token");
@@ -127,7 +146,20 @@ describe("Auth Controller", () => {
                 .post("/login")
                 .send({ user_name: "test", password: "password123" });
             expect(res.status).toBe(httpStatusCode.OK);
+            expect(res.body.id).toBe(1);
+            expect(res.body.user_name).toBe("test");
             expect(res.body.Token).toBe("token");
+        });
+
+        it("should handle server errors", async () => {
+            businessModel.getBusinessByUserName.mockImplementation(() => {
+                throw new Error("unexpected server error");
+            });
+            const res = await request(app)
+                .post("/login")
+                .send({ user_name: "test", password: "password123" });
+            expect(res.status).toBe(httpStatusCode.INTERNAL_SERVER_ERROR);
+            expect(res.text).toBe("unexpected server error");
         });
     });
 });
